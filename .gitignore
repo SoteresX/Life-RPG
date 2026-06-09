@@ -1,0 +1,10 @@
+# Ignore backend dependencies
+liferpg-server/node_modules/
+
+# Ignore frontend dependencies
+liferpg-frontend/node_modules/
+dist/
+.env
+
+# MacOS system files
+.DS_Store
