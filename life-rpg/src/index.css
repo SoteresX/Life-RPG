@@ -50,8 +50,21 @@
   }
 }
 
+@font-face {
+  font-family: 'StardewFont';
+  src: url('./assets/svthin.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
+  font-family: 'StardewFont', 'Courier New', Courier, monospace !important;
+}
+
 body {
   margin: 0;
+  -webkit-font-smoothing: none; /* Disables font blurring to keep pixel fonts perfectly crisp */
+  -moz-osx-font-smoothing: none;
 }
 
 #root {

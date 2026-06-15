@@ -2,25 +2,36 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  width: 100%;             /* Changed from 100vw to 100% */
-  background-color: #2b1d15; 
+  width: 100%;
   color: #f4ebd0; 
   font-family: 'Courier New', Courier, monospace; 
+
+  background-image: url('../../assets/dashboard_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #2b1d15;
 }
 
 .sidebar-panel {
   width: 260px;
-  background-color: #1a110c; /* Deep shadow/charcoal sidebar background */
-  border-right: 4px solid #72432a; /* Thick wooden visual divider border */
+  border: 2px solid #72432a;
   display: flex;
   flex-direction: column;
   padding: 20px;
+  margin: 20px;
+  background-image: linear-gradient(to bottom, #ffca8d, #fcba6e);
+  border: 4px solid #CF7415; 
+  box-shadow: 
+    inset 0 0 0 3px #893703,    /* Inner dark wood bevel ring */
+    inset 0 0 0 5px #CB8348,    /* Inner light wood accent line */
+    0 4px 0px rgba(0, 0, 0, 0.4); /* Dark drop shadow underneath the box */
 }
 
 .sidebar-header h3 {
   text-align: center;
-  color: #cca43b; /* Gold fantasy headers */
-  border-bottom: 2px dashed #72432a;
+  color: #2C2322;
+  border-bottom: 2px solid #72432a;
   padding-bottom: 10px;
   margin-top: 0;
 }
@@ -35,22 +46,34 @@
 
 /* --- RPG CORE SIDEBAR BUTTONS --- */
 .menu-btn {
-  background: #3d2519;
-  border: 2px solid #72432a;
-  color: #f4ebd0;
+  background: #fdbd73;
+  border: none;
+  box-shadow: 
+    inset 0 0 0 1px #893703,    /* Inner dark wood bevel ring */
+    inset 0 0 0 3px #CB8348,    /* Inner light wood accent line */
+    0 3px 0px rgba(0, 0, 0, 0.4); /* Dark drop shadow underneath the box */
+  color: #2C2322;
   padding: 12px;
   text-align: left;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
 
 .menu-btn:hover, .menu-btn.active {
-  background: #cca43b;
+  background: rgb(255, 225, 150);
   color: #1a110c;
-  border-color: #f4ebd0;
   font-weight: bold;
+}
+
+.menu-btn:active{
+  transform: translateY(4px);
+  box-shadow: 
+    inset 0 0 0 1px #893703,
+    inset 0 0 0 3px #CB8348,
+    0 0px 0px #893703,          /* Lip squished to 0px */
+    0 2px 0px rgba(0, 0, 0, 0.4); /* Leftover small shadow close to the body */
 }
 
 .logout-btn {
@@ -59,18 +82,25 @@
   color: #ffffff;
   padding: 10px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 20px;
+
+  box-shadow: 0 2px 0 1px rgb(117, 0, 0);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
 
 .logout-btn:hover {
   background: #ad3232;
 }
 
+.logout-btn:active{
+  transform: translateY(4px);
+}
+
 /* --- MAIN DASHBOARD CONTENT SLATE --- */
 .dashboard-content {
   flex-grow: 1;
   padding: 4px 40px;
-  background: radial-gradient(circle, #3d261c 0%, #2b1d15 100%);
+  /* background: radial-gradient(circle, #3d261c 0%, #2b1d15 100%); */
   overflow-y: auto;
   width: 100%;
 }

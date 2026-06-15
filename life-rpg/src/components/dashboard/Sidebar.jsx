@@ -24,7 +24,7 @@ function Sidebar({ activeTab, setActiveTab, onLogout}){
                 ))}
             </nav>
             <button onClick={onLogout} className="logout-btn">
-                🚪 Log Out
+                Log Out
             </button>
         </div>
     );

@@ -1,0 +1,3 @@
+Outside Border: #CF7415
+Border: #893703
+Inner Border: #CB8348
