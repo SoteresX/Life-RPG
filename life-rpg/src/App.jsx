@@ -1,23 +1,26 @@
 import { useState } from "react";
 import AuthForm from "./components/AuthForm";
 import './App.css';
+import CharacterDashboard from "./components/dashboard/CharacterDashboard";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
 
+  const handleLogOut = () => {
+    setLoggedInUser(null);
+  };
+
   if (loggedInUser) {
     return (
-      <div className="gateway-container" style={{ textAlign: 'center' }}>
-        <h2 className="gateway-title">Welcome back!</h2>
-        <p style={{ color: '#72432a', fontSize: '24px' }}>Player: {loggedInUser.user_name}</p>
-        <button onClick={() => setLoggedInUser(null)} className="btn-register" style={{ backgroundColor: '#a63a3a' }}>
-          Log Out
-        </button>
-      </div>
+      <CharacterDashboard user={loggedInUser} onLogout={handleLogOut}/>
     );
   }
 
-  return <AuthForm onLoginSuccess={setLoggedInUser} />;
+  return (
+    <div className="app-container">
+      <AuthForm onLoginSuccess={setLoggedInUser} />
+    </div>
+  );
 }
 
 export default App;
