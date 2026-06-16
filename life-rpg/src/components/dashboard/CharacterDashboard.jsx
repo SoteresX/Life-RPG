@@ -4,7 +4,7 @@ import ProfileCard from './ProfileCard';
 import SkillList from './SkillList';
 import './CharacterDashboard.css';
 
-function CharacterDashboard({ user, onLogout }){
+function CharacterDashboard({ user, onLogout, notify }){
     const [activeTab, setActiveTab] = useState('profile');
 
     return(
@@ -20,7 +20,7 @@ function CharacterDashboard({ user, onLogout }){
                 {activeTab === 'profile' && (
                 <div className="tab-view fade-in">
                     <h2>📜 Character Profile</h2>
-                    <ProfileCard user={user} />
+                    <ProfileCard user={user} notify={notify} />
                 </div>
                 )}
 

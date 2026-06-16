@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { authenticateUser } from "../services/authService";
 
-function AuthForm({ onLoginSuccess }) {
+function AuthForm({ onLoginSuccess, notify }) {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [user_name, setUser_name] = useState('');
   const [password, setPassword] = useState('');
@@ -14,9 +14,9 @@ function AuthForm({ onLoginSuccess }) {
       const data = await authenticateUser(endpoint, user_name, password);
 
       if (data.error) {
-        alert(data.error);
+        notify(data.error);
       } else {
-        alert(data.message);
+        notify(data.message);
         setUser_name('');
         setPassword('');
 
@@ -28,7 +28,7 @@ function AuthForm({ onLoginSuccess }) {
       }
     } catch (err) {
       console.error(err);
-      alert("Could not connect to the server");
+      notify("Could not connect to the server");
     }
   };
 
