@@ -20,6 +20,12 @@
   padding: 20px;
 }
 
+.profile{
+    display: flex;
+    justify-content: space-around;
+}
+
+
 .tab-view h2 {
   color: #1a110c;
 }

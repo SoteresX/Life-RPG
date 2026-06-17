@@ -1,0 +1,75 @@
+/* --- SKILLS SUMMARY CONTAINER CARD --- */
+.skills-summary-card {
+  background: #FFC98B;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 320px; /* Aligns neatly alongside standard RPG profile cards */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    inset 0 0 0 1px #893703,    /* Inner dark wood bevel ring */
+    inset 0 0 0 3px #CB8348,    /* Inner light wood accent line */
+    0 3px 0px rgba(0, 0, 0, 0.4); /* Dark drop shadow underneath */
+}
+
+.summary-title {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+  color: #1a110c;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.summary-divider {
+  width: 100%;
+  height: 2px;
+  border-bottom: 2px dashed #72432a; /* RPG-style parchment separator line */
+  margin-bottom: 12px;
+}
+
+.summary-rows-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* --- INDIVIDUAL SKILL ROWS --- */
+.summary-skill-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-skill-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: bold;
+  color: #1a110c;
+}
+
+.summary-skill-name {
+  text-transform: capitalize;
+}
+
+.summary-skill-level {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* --- THE MINI TRACK ARCHITECTURE --- */
+.skill-track-bg {
+  background-color: #111c11; /* Deep, muted forest background track */
+  height: 12px; /* Marginally sleeker height profile than main HP/Energy bars */
+}
+
+/* Fallback loading state styling */
+.skills-summary-card.empty-state {
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+}
+
+.loading-text {
+  color: #72432a;
+  font-style: italic;
+}

@@ -93,7 +93,17 @@ app.post('/api/register', async (req,res) => {
             'INSERT INTO users (user_name, password_hash) VALUES ($1, $2) RETURNING id, user_name', [user_name, passwordHash]
         );
 
-        res.json({message: "Registration successful!", user: newUser.rows[0]});
+        const userId = newUser.rows[0].id;
+
+        const seedSkillsQuery = `INSERT INTO user_skills (user_id, skill_key, current_level, current_exp)
+        VALUES
+            ($1, 'sleep', 1, 0),
+            ($1, 'food', 1, 0),
+            ($1, 'cooking', 1, 0),
+            ($1, 'fitness',1, 0)`;
+        await pool.query(seedSkillsQuery, [userId]);
+
+        res.json({message: "Registration successful! Life skills initialized.", user: newUser.rows[0]});
     } catch (err){
         console.error(err.message);
         res.status(500).json({error: "User might already exist or server error."})
@@ -132,6 +142,30 @@ app.post('/api/user/upload-avatar', upload.single('avatar'), async (req, res) =>
         res.status(500).json({error: "Server error during avatar saving."});
     }
 });
+
+app.get('/api/user/:userId/skills', async (req, res) => {
+    const {userId} = req.params;
+
+    try{
+        const skillsResult = await pool.query(
+            'SELECT skill_key, current_level FROM user_skills WHERE user_id = $1', [userId]
+        );
+
+        if (skillsResult.rows.length === 0){
+            return res.json({ sleep: 1, food: 1, cooking: 1, fitness: 1});
+        }
+
+        const formattedSkills = skillsResult.rows.reduce((acc, row) => {
+            acc[row.skill_key] = row.current_level;
+            return acc;
+        }, {});
+
+        res.json(formattedSkills);
+    } catch (err){
+        console.error(err.message);
+        res.status(500).json({error: "Server error retrieving user skills."});
+    }
+})
 
 app.listen(5000, () => {
     console.log('Backend server is officially running on port 5000');

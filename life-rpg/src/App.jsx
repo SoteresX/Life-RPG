@@ -9,7 +9,7 @@ function App() {
   const [notifications, setNotifications] = useState([]);
 
   const triggerNotification = (message, type = 'success') => {
-    const id = Date.now();
+    const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     setNotifications((prev) => [...prev, { id, message, type}]);
   };
 
