@@ -1,4 +1,5 @@
 import React, {useRef, useState} from "react";
+import './ProfileCard.css';
 
 function ProfileCard({ user, notify }){
     const [avatarUrl, setAvatarUrl] = useState(() => {
@@ -67,7 +68,8 @@ function ProfileCard({ user, notify }){
         />
         <div className="userTitles">
           <h2 className="player-name">{user.user_name}</h2>
-          <span className="player-title">Adventurer, Lvl. {user.level}</span>
+          <span className="player-title">Adventurer</span>
+          <span className="player-title">Lvl. {user.level}</span>
         </div>
       </div>
       <div className="stat-bars-container">
@@ -101,6 +103,8 @@ function ProfileCard({ user, notify }){
         </div>
       </div>
     </div>
+
+    
   );
 }
 

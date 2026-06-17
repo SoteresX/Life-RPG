@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import ProfileCard from './ProfileCard';
 import SkillList from './SkillList';
-import './CharacterDashboard.css';
+import "./DashboardLayout.css";
 
 function CharacterDashboard({ user, onLogout, notify }){
     const [activeTab, setActiveTab] = useState('profile');

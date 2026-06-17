@@ -1,4 +1,5 @@
 import React from 'react';
+import "./SkillList.css";
 
 const SKILL_MILESTONES = {
   sleep: {
