@@ -11,6 +11,7 @@ function ProfileCard({ user, notify }){
     const fileInputRef = useRef(null);
 
     const nextLevelExp = user.level * 100;
+    const maxHP = 100;
     const expPercentage = Math.min((user.exp / nextLevelExp) * 100, 100);
 
     const handleAvatarClick = () => {
@@ -48,7 +49,6 @@ function ProfileCard({ user, notify }){
     return (
     <div className="profile-card">
       <div className="avatar-container">
-        {/* Clickable Avatar Container */}
         <div className="pixel-avatar clickable-avatar" onClick={handleAvatarClick} title="Click to upload avatar">
           {avatarUrl ? (
             <img src={avatarUrl} alt="User Avatar" className="avatar-img" />
@@ -58,7 +58,6 @@ function ProfileCard({ user, notify }){
           <div className="avatar-overlay">✏️</div>
         </div>
 
-        {/* Hidden File Input */}
         <input 
           type="file" 
           ref={fileInputRef} 
@@ -66,19 +65,38 @@ function ProfileCard({ user, notify }){
           accept="image/*" 
           style={{ display: "none" }} 
         />
-
-        <h2>{user.user_name}</h2>
-        <span className="player-title">Level {user.level} Adventurer</span>
+        <div className="userTitles">
+          <h2 className="player-name">{user.user_name}</h2>
+          <span className="player-title">Adventurer, Lvl. {user.level}</span>
+        </div>
       </div>
-
       <div className="stat-bars-container">
-        {/* Main Character EXP Bar */}
         <div className="stat-row">
           <div className="stat-labels">
             <span>EXP ({user.exp} / {nextLevelExp})</span>
           </div>
           <div className="progress-bar-container exp-bg">
             <div className="progress-fill exp-fill" style={{ width: `${expPercentage}%` }}></div>
+          </div>
+        </div>
+      </div>
+      <div className="stat-bars-container">
+        <div className="stat-row">
+          <div className="stat-labels">
+            <span>HP ({user.hp} / {maxHP})</span>
+          </div>
+          <div className="progress-bar-container hp-bg">
+            <div className="progress-fill hp-fill" style={{ width: `${user.hp}%` }}></div>
+          </div>
+        </div>
+      </div>
+      <div className="stat-bars-container">
+        <div className="stat-row">
+          <div className="stat-labels">
+            <span>ENERGY ({user.energy}%)</span>
+          </div>
+          <div className="progress-bar-container energy-bg">
+            <div className="progress-fill energy-fill" style={{ width: `${user.energy}%` }}></div>
           </div>
         </div>
       </div>

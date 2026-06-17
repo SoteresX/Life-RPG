@@ -1,3 +1,5 @@
 Outside Border: #CF7415
 Border: #893703
 Inner Border: #CB8348
+Background: #FFC98B
+Text: #1a110c

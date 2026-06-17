@@ -68,6 +68,8 @@ app.post('/api/login', async (req,res) => {
                 user_name: user.user_name,
                 level: user.level,
                 exp: user.exp,
+                hp: user.hp,
+                energy: user.energy,
                 avatar_url: user.avatar_url
             }
         });

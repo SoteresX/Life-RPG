@@ -23,9 +23,9 @@
   background-image: linear-gradient(to bottom, #ffca8d, #fcba6e);
   border: 4px solid #CF7415; 
   box-shadow: 
-    inset 0 0 0 3px #893703,    /* Inner dark wood bevel ring */
-    inset 0 0 0 5px #CB8348,    /* Inner light wood accent line */
-    0 4px 0px rgba(0, 0, 0, 0.4); /* Dark drop shadow underneath the box */
+    inset 0 0 0 3px #893703,    
+    inset 0 0 0 5px #CB8348,    
+    0 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 .sidebar-header h3 {
@@ -99,47 +99,52 @@
 /* --- MAIN DASHBOARD CONTENT SLATE --- */
 .dashboard-content {
   flex-grow: 1;
-  padding: 4px 40px;
+  margin: 20px;
   /* background: radial-gradient(circle, #3d261c 0%, #2b1d15 100%); */
   overflow-y: auto;
   width: 100%;
+  padding: 20px;
 }
 
 .tab-view h2 {
-  color: #cca43b;
-  border-bottom: 3px double #72432a;
-  padding-bottom: 8px;
+  color: #1a110c;
 }
 
 /* --- THE PIXEL AVATAR PROFILE DESIGN --- */
 .profile-card {
-  background: #1a110c;
-  border: 4px solid #72432a;
+  background: #FFC98B;
   padding: 24px;
   border-radius: 8px;
-  max-width: 600px;
+  max-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 
+    inset 0 0 0 1px #893703,    /* Inner dark wood bevel ring */
+    inset 0 0 0 3px #CB8348,    /* Inner light wood accent line */
+    0 3px 0px rgba(0, 0, 0, 0.4); /* Dark drop shadow underneath the box */
 }
 
 .avatar-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
+  gap: 20px;
 }
 
 .pixel-avatar {
   font-size: 64px;
   background: #3d2519;
-  border: 3px solid #cca43b;
+  border: 2px solid #CB8348;
   width: 90px;
   height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   box-shadow: 0 0 15px rgba(204, 164, 59, 0.3);
   position: relative;
-  overflow: hidden; /* Clips the uploaded square image into a nice circle */
+  overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .clickable-avatar {
@@ -155,8 +160,8 @@
 .avatar-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Prevents stretching or squishing profiles */
-  image-rendering: pixelated; /* Keeps custom pixel graphics sharp if users upload them */
+  object-fit: cover;
+  image-rendering: pixelated;
 }
 
 .avatar-overlay {
@@ -177,8 +182,18 @@
 }
 
 .player-title {
-  color: #cca43b;
+  color: #1a110c;
   font-style: italic;
+}
+
+.player-name{
+  font-size: 30px;
+}
+
+.userTitles{
+  width: fit-content;
+  height: fit-content;
+  text-align: left;
 }
 
 /* --- HEAVY-DUTY INTERACTIVE PROGRESS BAR GAUGES --- */
@@ -193,16 +208,22 @@
   justify-content: space-between;
   margin-bottom: 4px;
   font-weight: bold;
+  color: #1a110c;
 }
 
 .progress-bar-container {
   width: 100%;
-  height: 24px;
-  background: #110b08;
-  border: 2px solid #50301e;
-  border-radius: 6px;
+  height: 16px;
+  border-radius: 2px;
   overflow: hidden;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.7);
+  box-shadow: 
+    0 0 0 1px #893703,    /* Inner dark wood bevel ring */
+    0 0 0 3px #CB8348,    /* Inner light wood accent line */
+    0 1px 0px rgba(0, 0, 0, 0.4); /* Dark drop shadow underneath the box */
+}
+
+.hp-bg{
+  background-color: rgb(54, 0, 0);
 }
 
 .progress-fill {
@@ -210,11 +231,8 @@
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom Experience Purple Meter */
 .exp-fill { background: linear-gradient(90deg, #8a2be2, #b862ff); }
-/* Custom Crimson Red Health Vitality Meter */
 .hp-fill { background: linear-gradient(90deg, #c62828, #ff5252); }
-/* Custom Shocking Thunder Yellow Energy Stamina Meter */
 .energy-fill { background: linear-gradient(90deg, #e6b800, #fff066); }
 
 /* --- LIFE SKILLS TREE MASTER GRID --- */
