@@ -167,6 +167,39 @@ app.get('/api/user/:userId/skills', async (req, res) => {
     }
 })
 
+app.get('/api/user/:userId/quests', async (req, res) => {
+    const { userId } = req.params;
+    try{
+        const result = await pool.query('SELECT * FROM user_quests WHERE user_id = $1 ORDER BY id DESC', [userId]);
+        res.json(result.rows);
+    } catch (err){
+        console.error("Error fetching quests:", err.message);
+        res.status(500).json({error: "Server error retrieving quests."});
+    }
+});
+
+app.post('/api/user/:userId/quests', async (req, res) => {
+    const { userId } = req.params;
+    const { title, difficulty, skill_target} = req.body;
+
+    if (!title || !skill_target){
+        return res.status(400).json({error: "Title and target skill are required fields."});
+    }
+
+    try{
+        const newQuest = await pool.query(
+            `INSERT INTO user_quests (user_id, title, difficulty, skill_target)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *`, [userId, title, difficulty || 'Bronze', skill_target]
+        );
+        res.json({message: "Quest added succesffully!", quest: newQuest.rows[0]});
+    } catch (err){
+        console.error("Error creating quest:", err.message);
+        res.status(500).json({error: "Server error creating new quest."});
+    }
+})
+
+
 app.listen(5000, () => {
     console.log('Backend server is officially running on port 5000');
 })

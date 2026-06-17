@@ -1,0 +1,400 @@
+/* --- Containers & General Typography --- */
+.quests-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #4a3728; /* Soft woody brown text instead of harsh black */
+}
+
+.quests-container h2 {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  color: #3e2723;
+  text-shadow: 1px 1px 0px #fff;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #6d4c41;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+/* --- The Cozy Quest Creator Form --- */
+.quest-form {
+  background: #FFC98B;
+  box-shadow: 
+    inset 0 0 0 1px #893703,    
+    inset 0 0 0 3px #CB8348,    
+    0 1px 0px rgba(0, 0, 0, 0.4); 
+  padding: 25px;
+}
+
+.quest-form h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #1a110c;
+  border-bottom: 2px dashed #d7ccc8;
+  padding-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  flex: 1;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #1a110c;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 2px solid #d7ccc8;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #4a3728;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #8d6e63;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+/* Post Button */
+.post-quest-btn {
+  width: 100%;
+  padding: 12px;
+  background: #7cb342; /* Stardew Green */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #558b2f; /* Thick retro button shadow */
+  transition: transform 0.1s, box-shadow 0.1s;
+  margin-top: 10px;
+}
+
+.post-quest-btn:hover {
+  background: #8bc34a;
+}
+
+.post-quest-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #558b2f;
+}
+
+/* --- Active Quest Bulletin Board Layout --- */
+.active-quests-section h3 {
+  color: #3e2723;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+}
+
+.empty-msg {
+  background: #efebe9;
+  border: 2px dashed #bcaaa4;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  color: #8d6e63;
+}
+
+.quests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+/* --- Base Quest Card Styles --- */
+.quest-card {
+  background: #fafafa;
+  border: 2px solid #d7ccc8;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quest-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.08);
+}
+
+.quest-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.quest-badge-skill {
+  background: #e0f2f1;
+  color: #00796b;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.quest-badge-rank {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.quest-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #3e2723;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* --- Cozy Theme Difficulty Variants --- */
+
+/* 1. Daily Favor (Easy Green) */
+.quest-card.rank-favor {
+  border-left: 6px solid #8bc34a;
+  background: #f9fbe7;
+}
+.quest-card.rank-favor .quest-badge-rank {
+  background: #dcedc8;
+  color: #33691e;
+}
+
+/* 2. Community Project (Medium Warm Brown) */
+.quest-card.rank-project {
+  border-left: 6px solid #a1887f;
+  background: #efebe9;
+}
+.quest-card.rank-project .quest-badge-rank {
+  background: #d7ccc8;
+  color: #4e342e;
+}
+
+/* 3. Special Order (Hardcore Iridium Purple) */
+.quest-card.rank-special {
+  border-left: 6px solid #b388ff;
+  background: #f3e5f5;
+  box-shadow: 0 0 8px rgba(179, 136, 255, 0.25);
+}
+.quest-card.rank-special .quest-badge-rank {
+  background: #e040fb;
+  color: #fff;
+  animation: pulseGlow 2s infinite alternate;
+}
+
+/* Animations */
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 2px rgba(224, 64, 251, 0.4); }
+  100% { box-shadow: 0 0 8px rgba(224, 64, 251, 0.8); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+/* --- Header Layout adjustments --- */
+.quests-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e0d4c3;
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+/* --- Floating Circular Trigger Button --- */
+.add-quest-trigger-btn {
+    position: absolute;
+    left: 95vw;
+    top: 90vh;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    background: #7cb342; /* Cozy green */
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #558b2f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: normal;
+    padding-top: 6px;
+    padding-left: 7px;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.add-quest-trigger-btn:hover {
+  background: #8bc34a;
+  transform: scale(1.05);
+}
+
+.add-quest-trigger-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #558b2f;
+}
+
+/* --- Full Screen Modal Background Tint --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(46, 34, 25, 0.45); /* Soft dark-tinted brown overlay */
+  backdrop-filter: blur(3px); /* Elegant blur element */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Forces it over sidebars */
+  animation: fadeInBackground 0.2s ease-out;
+}
+
+/* --- Pop up window content wrap --- */
+.modal-panel-content {
+  width: 90%;
+  max-width: 550px;
+  margin-bottom: 0 !important; /* Resets baseline margin */
+  animation: slideDownPanel 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #893703;
+  padding-bottom: 8px;
+}
+
+.modal-header h3 {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* --- Small Close Button inside Panel --- */
+.close-panel-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: #8d6e63;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-panel-btn:hover {
+  color: #c62828; /* Soft red alert text on hover */
+}
+
+/* --- Panel Animations --- */
+.modal-overlay.fade-out-bg {
+  animation: fadeOutBackground 0.2s ease-in forwards;
+}
+
+/* Hook applied to modal-panel-content during exit */
+.modal-panel-content.slide-up-exit {
+  animation: slideUpPanel 0.2s ease-in forwards;
+}
+
+/* --- Overlay Default (Entry) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(46, 34, 25, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  animation: fadeInBackground 0.2s ease-out forwards; /* Added forwards */
+}
+
+/* --- Panel Content Default (Entry) --- */
+.modal-panel-content {
+  width: 90%;
+  max-width: 550px;
+  animation: slideDownPanel 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /* Added forwards */
+}
+
+/* --- Exit Overrides --- */
+.modal-overlay.fade-out-bg {
+  animation: fadeOutBackground 0.2s ease-in forwards !important;
+}
+
+.modal-panel-content.slide-up-exit {
+  animation: slideUpPanel 0.2s ease-in forwards !important;
+}
+
+/* --- Keyframe Definitions --- */
+@keyframes fadeInBackground {
+  from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+  to { background: rgba(46, 34, 25, 0.45); backdrop-filter: blur(3px); }
+}
+
+@keyframes fadeOutBackground {
+  from { background: rgba(46, 34, 25, 0.45); backdrop-filter: blur(3px); }
+  to { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+}
+
+@keyframes slideDownPanel {
+  from {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpPanel {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}

@@ -4,6 +4,7 @@ import ProfileCard from './ProfileCard';
 import SkillList from './SkillList';
 import "./DashboardLayout.css";
 import SkillsSummary from './SkillSummary';
+import QuestMenu from './QuestMenu';
 
 function CharacterDashboard({ user, onLogout, notify }){
     const [activeTab, setActiveTab] = useState('profile');
@@ -50,6 +51,9 @@ function CharacterDashboard({ user, onLogout, notify }){
                 <div className="tab-view fade-in">
                     <SkillList />
                 </div>
+                )}
+                {activeTab === 'quests' && (
+                    <QuestMenu user={user} notify={notify} />
                 )}
             </main>
         </div>

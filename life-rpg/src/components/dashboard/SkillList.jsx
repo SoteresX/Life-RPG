@@ -2,7 +2,7 @@ import React from 'react';
 import "./SkillList.css";
 
 const SKILL_MILESTONES = {
-  sleep: {
+sleep: {
     name: "Sleep",
     description: "Your biological clock consistency.",
     milestones: {
@@ -35,19 +35,8 @@ const SKILL_MILESTONES = {
       5: "Culinary Artist: You craft custom gourmet macro-balanced meals."
     }
   },
-  gaming: {
-    name: "Gaming & Leisure",
-    description: "Balancing entertainment without letting it ruin your day.",
-    milestones: {
-      1: "Addicted: Gaming consumes your nights; priorities are slipping.",
-      2: "Casual: You play often, but skip chores occasionally.",
-      3: "Regulated: Gaming occurs only after your daily tasks are 100% done.",
-      4: "Social Link: You use gaming purely to bond with friends healthily.",
-      5: "Zen Gamer: Mindful gaming; complete detachment, pure relaxation."
-    }
-  },
-  health: {
-    name: "Physical Health",
+  fitness: {
+    name: "Physical Health & Fitness",
     description: "Cardio, strength, and physical well-being.",
     milestones: {
       1: "Sedentary: Most days are spent sitting; stretching is rare.",
@@ -59,41 +48,41 @@ const SKILL_MILESTONES = {
   }
 };
 
-function SkillList(){
-    const mockUserSkills = {sleep: 2, food:1, cooking: 3, gaming: 3, health: 1};
+function SkillList( {userSkills} ){
+    const liveSkills = userSkills = {sleep: 1, food:1, cooking: 1, gaming: 1, health: 1};
 
     return (
-        <div className="skills-container">
-      <h2>⚔️ Life Skill Masteries</h2>
-      <p className="subtitle">Each skill caps at Level 5. Unlock higher tiers to upgrade your life description!</p>
-      
-      <div className="skills-grid">
-        {Object.keys(SKILL_MILESTONES).map((skillKey) => {
-          const skillDetails = SKILL_MILESTONES[skillKey];
-          const currentLevel = mockUserSkills[skillKey];
-          const currentDescription = skillDetails.milestones[currentLevel];
-          const progressPercentage = (currentLevel / 5) * 100;
+      <div className="skills-container">
+        <h2>⚔️ Life Skill Masteries</h2>
+        <p className="subtitle">Each skill caps at Level 5. Unlock higher tiers to upgrade your life description!</p>
+        
+        <div className="skills-grid">
+          {Object.keys(SKILL_MILESTONES).map((skillKey) => {
+            const skillDetails = SKILL_MILESTONES[skillKey];
+            const currentLevel = liveSkills[skillKey] || 1;
+            const currentDescription = skillDetails.milestones[currentLevel] || "Error";
+            const progressPercentage = (currentLevel / 5) * 100;
 
-          return (
-            <div key={skillKey} className="skill-card">
-              <div className="skill-header">
-                <h3>{skillDetails.name}</h3>
-                <span className="skill-badge">LVL {currentLevel}/5</span>
-              </div>
-              <p className="skill-desc-taste">{skillDetails.description}</p>
-              
-              <div className="progress-bar-container skill-bg">
-                <div className="progress-fill skill-fill" style={{ width: `${progressPercentage}%` }}></div>
-              </div>
+            return (
+              <div key={skillKey} className="skill-card">
+                <div className="skill-header">
+                  <h3>{skillDetails.name}</h3>
+                  <span className="skill-badge">LVL {currentLevel}/5</span>
+                </div>
+                <p className="skill-desc-taste">{skillDetails.description}</p>
+                
+                <div className="progress-bar-container skill-bg">
+                  <div className="progress-fill skill-fill" style={{ width: `${progressPercentage}%` }}></div>
+                </div>
 
-              <div className="milestone-box">
-                <strong>Current Status:</strong> "{currentDescription}"
+                <div className="milestone-box">
+                  <strong>Current Status:</strong> "{currentDescription}"
+                </div>
               </div>
-            </div>
-            );
-        })}
-        </div>
-    </div>  
+              );
+          })}
+          </div>
+        </div>  
     )
 }
 
