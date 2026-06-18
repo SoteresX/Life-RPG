@@ -12,6 +12,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { stripTypeScriptTypes } = require('module');
 
 const app = express();
 app.use(express.json())
@@ -167,6 +168,11 @@ app.get('/api/user/:userId/skills', async (req, res) => {
     }
 })
 
+
+//==================================
+//             QUESTS
+//==================================
+
 app.get('/api/user/:userId/quests', async (req, res) => {
     const { userId } = req.params;
     try{
@@ -199,6 +205,30 @@ app.post('/api/user/:userId/quests', async (req, res) => {
     }
 })
 
+app.put('/api/quests/:questId', async (req,res) => {
+    const { questId } = req.params;
+    const { title, difficulty, skill_target } = req.body;
+    try{
+        const updated = await pool.query(
+            `UPDATE user_quests SET title = $1, difficulty = $2, skill_target = $3 WHERE id = $4 RETURNING *`, [title, difficulty, skill_target, questId]
+        );
+        res.json({ message: "Quest updated!", quest: updated.rows[0]});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: "Server error updating quest."});
+    }
+})
+
+app.delete('/api/quests/:questId', async (req, res) => {
+    const { questId } = req.params;
+    try{
+        await pool.query('DELETE FROM user_quests WHERE id = $1', [questId]);
+        res.json({ message: "Quest successfully removed."});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: "Server error deleting quest."});
+    }
+})
 
 app.listen(5000, () => {
     console.log('Backend server is officially running on port 5000');

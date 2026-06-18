@@ -1,22 +1,13 @@
 /* --- Containers & General Typography --- */
 .quests-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #4a3728; /* Soft woody brown text instead of harsh black */
 }
 
-.quests-container h2 {
-  font-size: 2rem;
-  margin-bottom: 5px;
-  color: #3e2723;
-  text-shadow: 1px 1px 0px #fff;
-}
-
 .subtitle {
   font-size: 0.95rem;
-  color: #6d4c41;
+  color: #FFC98B;
   margin-bottom: 25px;
   font-style: italic;
 }
@@ -109,6 +100,16 @@
   color: #3e2723;
   font-size: 1.4rem;
   margin-bottom: 15px;
+}
+
+.active-quests-section{
+  background-color: #FFC98B;
+  padding: 20px;
+  height: 75vh;
+  box-shadow: 
+    inset 0 0 0 3px #893703,  
+    inset 0 0 0 6px #CB8348,    
+    0 3px 0px rgba(0, 0, 0, 0.4);
 }
 
 .empty-msg {
@@ -365,8 +366,67 @@
 .modal-panel-content.slide-up-exit {
   animation: slideUpPanel 0.2s ease-in forwards !important;
 }
+/* --- Edit Icon Card Button Positioning --- */
+.quest-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-/* --- Keyframe Definitions --- */
+.edit-quest-card-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  opacity: 0; /* Hidden by default */
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  padding: 2px;
+  line-height: 1;
+}
+
+/* Force pen element indicator to fade into display view upon parent card container hover */
+.quest-card:hover .edit-quest-card-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.edit-quest-card-btn:hover {
+  transform: scale(1.2) !important;
+}
+
+/* --- Modal Layout Button Actions Alignment Row --- */
+.modal-actions-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+/* Cozy Red Delete button styling matching your retro palette block shadows */
+.delete-quest-btn {
+  padding: 12px 20px;
+  background: #e53935; /* Retro Crimson alert color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b71c1c;
+  transition: transform 0.1s, box-shadow 0.1s;
+  white-space: nowrap;
+}
+
+.delete-quest-btn:hover {
+  background: #ef5350;
+}
+
+.delete-quest-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #b71c1c;
+}
+
 @keyframes fadeInBackground {
   from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
   to { background: rgba(46, 34, 25, 0.45); backdrop-filter: blur(3px); }
