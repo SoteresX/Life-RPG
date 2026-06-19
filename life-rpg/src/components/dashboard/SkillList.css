@@ -48,6 +48,51 @@
   color: #e3d2be;
 }
 
+/* Container for the overall exp subsegment block */
+.skill-exp-section {
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+/* Metadata text grid layout styling */
+.skill-exp-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #a3a3a3;
+  margin-bottom: 4px;
+}
+
+.exp-numbers-tracker {
+  font-weight: 600;
+  color: #c084fc; /* Tinted violet text color */
+}
+
+/* Background tracks container adjustments */
+.skill-exp-track-bg {
+  height: 6px !important; /* Makes it nice and tiny */
+  background-color: #261a3c; /* Deep custom dark violet rail tracks background color */
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* The actual neon purple active layout meter */
+.skill-exp-fill-purple {
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #d8b4fe); /* Sleek purple neon gradient shift */
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+  transition: width 0.4s ease-out;
+}
+
+/* Style for when a skill gets to level 5 */
+.maxed-out-tag {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #fcd34d; /* Golden text */
+  margin: 12px 0;
+}
+
 /* --- UTILITY ANIMATIONS --- */
 .fade-in {
   animation: fadeInEffect 0.3s ease-in-out;

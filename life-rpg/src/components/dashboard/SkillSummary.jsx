@@ -5,21 +5,18 @@ const SKILL_NAMES = {
   sleep: "Sleep",
   food: "Food & Diet",
   cooking: "Cooking",
-  fitness: "Gaming & Leisure",
+  fitness: "Fitness",
   house_chores: "House Chores"
 };
 
 function SkillsSummary({ userSkills }) {
-  // Guard clause in case user data or skills array hasn't loaded yet
-  if (!userSkills) {
+  if (!userSkills || !Array.isArray(userSkills)) {
     return (
       <div className="skills-summary-card empty-state">
         <span className="loading-text">Loading stats...</span>
       </div>
     );
   }
-
-  const activeSkills = userSkills || { sleep: 1, food: 1, cooking: 1, gaming: 1, health: 1 };
 
   return (
     <div className="skills-summary-card">
@@ -28,7 +25,11 @@ function SkillsSummary({ userSkills }) {
       
       <div className="summary-rows-container">
         {Object.keys(SKILL_NAMES).map((skillKey) => {
-          const currentLevel = activeSkills[skillKey] || 1;
+          // 🔍 Find the matching skill object in your new backend array
+          const skillData = userSkills.find(s => s.skill_key === skillKey);
+          
+          // Grab the level if it exists, otherwise default to 1
+          const currentLevel = skillData ? skillData.current_level : 1;
           
           // Each level milestone adds an exact 20% chunk to the bar width
           const progressPercentage = (currentLevel / 5) * 100;

@@ -149,7 +149,7 @@ app.get('/api/user/:userId/skills', async (req, res) => {
 
     try{
         const skillsResult = await pool.query(
-            'SELECT skill_key, current_level FROM user_skills WHERE user_id = $1', [userId]
+            'SELECT skill_key, current_level, current_exp FROM user_skills WHERE user_id = $1', [userId]
         );
 
         if (skillsResult.rows.length === 0){
@@ -162,7 +162,8 @@ app.get('/api/user/:userId/skills', async (req, res) => {
                 id: row.skill_key, // Used for React keys
                 skill_key: row.skill_key,
                 name: readableName,
-                current_level: row.current_level
+                current_level: row.current_level,
+                current_exp: row.current_exp
             }
            
         });
@@ -251,16 +252,16 @@ app.post('/api/quests/:questId/complete', async (req, res) => {
         //The amount of EXP, Skill EXP and coins each difficulty gives (can change any time)
         let userXpGained = 15;
         let skillXpGained = 25;
-        let coinsGained = 10;
+        let coinsGained = 5;
 
         if (quest.difficulty === 'Project'){
-            userXpGained = 40;
-            skillXpGained = 65;
-            coinsGained = 30;
+            userXpGained = 30;
+            skillXpGained = 45;
+            coinsGained = 15;
         } else if (quest.difficulty === 'Special'){
-            userXpGained = 100;
-            skillXpGained = 150;
-            coinsGained = 65;
+            userXpGained = 50;
+            skillXpGained = 60;
+            coinsGained = 30;
         }
 
         //Current user data

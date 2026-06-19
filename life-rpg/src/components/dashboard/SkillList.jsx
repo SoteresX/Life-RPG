@@ -60,7 +60,14 @@ sleep: {
 };
 
 function SkillList( {userSkills} ){
-    const liveSkills = userSkills;
+    if (!userSkills || !Array.isArray(userSkills)) {
+      return (
+        <div className="skills-container">
+          <h2>⚔️ Life Skill Masteries</h2>
+          <p className="loading-text">Inspecting guild registers...</p>
+        </div>
+      );
+    }
 
     return (
       <div className="skills-container">
@@ -70,9 +77,15 @@ function SkillList( {userSkills} ){
         <div className="skills-grid">
           {Object.keys(SKILL_MILESTONES).map((skillKey) => {
             const skillDetails = SKILL_MILESTONES[skillKey];
-            const currentLevel = liveSkills[skillKey] || 1;
+            const actualSkill = userSkills.find(s => s.skill_key === skillKey);
+            const currentLevel = actualSkill ? actualSkill.current_level : 1;
+            const currentExp = actualSkill ? actualSkill.current_exp : 0;
+
+            const expNeeded = Math.floor(150 * Math.pow(currentLevel, 2.15));
+            const expPercentage = Math.min((currentExp / expNeeded) * 100, 100);
+
             const currentDescription = skillDetails.milestones[currentLevel] || "Error";
-            const progressPercentage = (currentLevel / 5) * 100;
+            const totalProgressPercentage = (currentLevel / 5) * 100;
 
             return (
               <div key={skillKey} className="skill-card">
@@ -83,8 +96,27 @@ function SkillList( {userSkills} ){
                 <p className="skill-desc-taste">{skillDetails.description}</p>
                 
                 <div className="progress-bar-container skill-bg">
-                  <div className="progress-fill skill-fill" style={{ width: `${progressPercentage}%` }}></div>
+                  <div className="progress-fill skill-fill" style={{ width: `${totalProgressPercentage}%` }}></div>
                 </div>
+
+                {currentLevel < 5 ? (
+                <div className="skill-exp-section">
+                  <div className="skill-exp-meta">
+                    <span>Progress to Level up</span>
+                    <span className="exp-numbers-tracker">{currentExp} / {expNeeded} XP</span>
+                  </div>
+                  <div className="progress-bar-container skill-exp-track-bg">
+                    <div 
+                      className="progress-fill skill-exp-fill-purple" 
+                      style={{ width: `${expPercentage}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="skill-exp-section maxed-out-tag">
+                  ✨ Skill Mastery Maximum Reached ✨
+                </div>
+              )}
 
                 <div className="milestone-box">
                   <strong>Current Status:</strong> "{currentDescription}"
