@@ -124,28 +124,27 @@ function QuestMenu({ user, userSkills, notify }) {
 
             {/* ACTIVE QUEST LIST */}
             <div className="active-quests-section">
-                <h3>Active Guild Contracts ({quests.length})</h3>
+                <div className="topQuestsPanel">
+                    <h3>Active Guild Contracts ({quests.length})</h3>
+                    <button className="add-quest-trigger-btn" onClick={() => manageModal('open')} title="Post a New Quest">+</button>
+                </div>
                 {quests.length === 0 ? (
                     <p className="empty-msg">The bulletin board is completely clear. Click the green button above to post a habit task!</p>
                 ) : (
                     <div className="quests-grid">
                         {quests.map((quest) => {
-                            // Calculate rewards for this specific quest card
                             const rewards = getQuestRewards(quest.difficulty);
 
                             return (
                                 <div key={quest.id} className={`quest-card rank-${quest.difficulty.toLowerCase()}`}>
                                     <div className="quest-meta">
-                                        <span className="quest-badge-skill">{quest.skill_target}</span>
+                                        <span className="quest-badge-skill">
+                                            {quest.skill_target?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} 
+                                        </span>
+                                        <span className="seperator">•</span>
                                         <span className="quest-badge-rank">{quest.difficulty}</span>
+                                        
                                         <div className="quest-meta-right">
-                                            <button 
-                                                className="quick-complete-card-btn"
-                                                onClick={() => handleCompleteQuest({ setQuests, notify }, quest)}
-                                                title="Complete Quest"
-                                            >
-                                                ✨
-                                            </button>
                                             <button 
                                                 className="edit-quest-card-btn" 
                                                 onClick={() => manageModal('edit', quest)}
@@ -155,16 +154,26 @@ function QuestMenu({ user, userSkills, notify }) {
                                             </button>
                                         </div>
                                     </div>
+                                    
                                     <h4 className="quest-title">{quest.title}</h4>
 
-                                    {/* NEW: REWARDS FOOTER PANEL */}
                                     <div className="quest-rewards-panel">
                                         <span className="reward-title">Rewards:</span>
                                         <div className="reward-badges">
                                             <span title="Player XP">✨ {rewards.xp}XP</span>
-                                            <span title={`${quest.skill_target.toUpperCase()} XP`}>🧬 {rewards.skillXp}XP</span>
+                                            <span title={`${quest.skill_target?.toUpperCase()} XP`}>🧬 {rewards.skillXp}XP</span>
                                             <span title="Gold Coins">💰 {rewards.coins}g</span>
                                         </div>
+                                    </div>
+
+                                    {/* ✨ NEW: Repositioned Complete Assignment Action Button Container */}
+                                    <div className="quest-card-actions-wrapper">
+                                        <button 
+                                            className="complete-assignment-btn"
+                                            onClick={() => handleCompleteQuest({ setQuests, notify }, quest)}
+                                        >
+                                            ⚔️ Complete Assignment
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -172,7 +181,6 @@ function QuestMenu({ user, userSkills, notify }) {
                     </div>
                 )}
             </div>
-            <button className="add-quest-trigger-btn" onClick={() => manageModal('open')} title="Post a New Quest">+</button>
         </div>
     );
 }

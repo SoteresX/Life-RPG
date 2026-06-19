@@ -1,7 +1,7 @@
 /* --- Containers & General Typography --- */
 .quests-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #4a3728; /* Soft woody brown text instead of harsh black */
+  color: #4a3728;
 }
 
 .subtitle {
@@ -14,16 +14,12 @@
 /* --- The Cozy Quest Creator Form --- */
 .quest-form {
   background: #FFC98B;
-  box-shadow: 
-    inset 0 0 0 1px #893703,    
-    inset 0 0 0 3px #CB8348,    
-    0 1px 0px rgba(0, 0, 0, 0.4); 
+  box-shadow: inset 0 0 0 1px #893703, inset 0 0 0 3px #CB8348, 0 1px 0px rgba(0, 0, 0, 0.4); 
   padding: 25px;
 }
 
 .quest-form h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
   color: #1a110c;
   border-bottom: 2px dashed #d7ccc8;
   padding-bottom: 10px;
@@ -38,8 +34,7 @@
 }
 
 .form-group label {
-  font-size: 0.85rem;
-  font-weight: bold;
+  font: bold 0.85rem sans-serif;
   text-transform: uppercase;
   color: #1a110c;
   margin-bottom: 6px;
@@ -51,7 +46,7 @@
   padding: 10px 12px;
   border: 2px solid #d7ccc8;
   border-radius: 6px;
-  background-color: #fff;
+  background: #fff;
   color: #4a3728;
   font-size: 0.95rem;
   outline: none;
@@ -73,22 +68,17 @@
 .post-quest-btn {
   width: 100%;
   padding: 12px;
-  background: #7cb342; /* Stardew Green */
+  background: #7cb342;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+  font: bold 1rem inherit;
   cursor: pointer;
-  box-shadow: 0 4px 0 #558b2f; /* Thick retro button shadow */
+  box-shadow: 0 4px 0 #558b2f;
   transition: transform 0.1s, box-shadow 0.1s;
-  margin-top: 10px;
 }
 
-.post-quest-btn:hover {
-  background: #8bc34a;
-}
-
+.post-quest-btn:hover { background: #8bc34a; }
 .post-quest-btn:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 #558b2f;
@@ -105,10 +95,7 @@
   background-color: #FFC98B;
   padding: 20px;
   height: 75vh;
-  box-shadow: 
-    inset 0 0 0 3px #893703,  
-    inset 0 0 0 6px #CB8348,    
-    0 3px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 0 0 3px #893703, inset 0 0 0 6px #CB8348, 0 3px 0px rgba(0, 0, 0, 0.4);
 }
 
 .empty-msg {
@@ -128,49 +115,40 @@
   align-items: start;
 }
 
-/* --- Base Quest Card Styles --- */
+/* --- Base Quest Card Styles (Consolidated) --- */
 .quest-card {
   background: #FFC98B;
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  box-shadow: 
-    inset 0 0 0 3px #893703,    
-    inset 0 0 0 5px #CB8348,    
-    0 4px 0px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 3px #893703, inset 0 0 0 5px #CB8348, 0 4px 0px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .quest-card:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    inset 0 0 0 3px #893703,    
-    inset 0 0 0 5px #CB8348,    
-    0 6px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 0 0 3px #893703, inset 0 0 0 5px #CB8348, 0 6px 0px rgba(0, 0, 0, 0.4);
 }
 
-.quest-meta {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
+
 
 .quest-badge-skill {
   background: #e0f2f1;
   color: #00796b;
   padding: 3px 8px;
   border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: bold;
+  font: bold 0.75rem sans-serif;
   text-transform: uppercase;
 }
 
 .quest-badge-rank {
-  font-size: 0.75rem;
-  font-weight: bold;
+  font: bold 0.75rem sans-serif;
   text-transform: uppercase;
   padding: 3px 8px;
+  
   border-radius: 4px;
 }
 
@@ -182,59 +160,62 @@
   word-wrap: break-word;
 }
 
-/* --- Cozy Theme Difficulty Variants --- */
-.quest-card.rank-favor .quest-badge-rank {
-  background: #dcedc8;
-  color: #33691e;
+
+
+/* --- Action Drawer Wrappers --- */
+.quest-card-actions-wrapper {
+  width: 100%;
+  max-height: 0px; 
+  opacity: 0;
+  transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
 }
 
-.quest-card.rank-project .quest-badge-rank {
-  background: #d7ccc8;
-  color: #4e342e;
+.quest-card:hover .quest-card-actions-wrapper {
+  max-height: 44px;
+  opacity: 1;
 }
 
-.quest-card.rank-special .quest-badge-rank {
-  background: #e040fb;
-  color: #fff;
-  animation: pulseGlow 2s infinite alternate;
+.complete-assignment-btn {
+  width: 100%;
+  height: 40px;
+  border: none;
+  background: #10b981;
+  color: #ffffff;
+  border-radius: 10px;
+  font: bold 0.9rem inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s ease;
 }
 
-/* Animations */
-@keyframes pulseGlow {
-  0% { box-shadow: 0 0 2px rgba(224, 64, 251, 0.4); }
-  100% { box-shadow: 0 0 8px rgba(224, 64, 251, 0.8); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-}
+.complete-assignment-btn:hover { background: #059669; }
 
 /* --- Floating Circular Trigger Button --- */
 .add-quest-trigger-btn {
-    position: absolute;
-    left: 95vw;
-    top: 90vh;
     border-radius: 50%;
-    height: 60px;
-    width: 60px;
-    background: #7cb342; /* Cozy green */
+    height: 50px;
+    width: 50px;
+    background: #7cb342;
     color: white;
-    font-size: 2rem;
-    font-weight: bold;
+    font: bold 2rem sans-serif;
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 0 #558b2f;
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: normal;
-    padding-top: 6px;
-    padding-left: 7px;
+    padding: 6px 0 0 3px;
     transition: transform 0.1s, background-color 0.2s;
+    margin-left: 20px;
+}
+
+.topQuestsPanel{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-quest-trigger-btn:hover {
@@ -247,13 +228,11 @@
   box-shadow: 0 1px 0 #558b2f;
 }
 
-/* --- Full Screen Modal Background Tint & Overlay --- */
+/* --- Full Screen Modal Elements --- */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   background: rgba(46, 34, 25, 0.45);
   backdrop-filter: blur(3px);
   display: flex;
@@ -263,7 +242,6 @@
   animation: fadeInBackground 0.2s ease-out forwards;
 }
 
-/* --- Pop up window content wrap --- */
 .modal-panel-content {
   width: 90%;
   max-width: 550px;
@@ -281,11 +259,10 @@
 
 .modal-header h3 {
   border-bottom: none !important;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
   padding-bottom: 0 !important;
 }
 
-/* --- Small Close Button inside Panel --- */
 .close-panel-btn {
   background: transparent;
   border: none;
@@ -296,42 +273,31 @@
   transition: color 0.2s;
 }
 
-.close-panel-btn:hover {
-  color: #c62828; /* Soft red alert text on hover */
-}
+.close-panel-btn:hover { color: #c62828; }
 
-/* --- Exit Overrides --- */
-.modal-overlay.fade-out-bg {
-  animation: fadeOutBackground 0.2s ease-in forwards !important;
-}
+.modal-overlay.fade-out-bg { animation: fadeOutBackground 0.2s ease-in forwards !important; }
+.modal-panel-content.slide-up-exit { animation: slideUpPanel 0.2s ease-in forwards !important; }
 
-.modal-panel-content.slide-up-exit {
-  animation: slideUpPanel 0.2s ease-in forwards !important;
-}
-
+/* --- Edit & Action Buttons --- */
 .edit-quest-card-btn {
   background: transparent;
   border: none;
   font-size: 0.9rem;
   cursor: pointer;
-  opacity: 0; /* Hidden by default */
+  opacity: 0;
   transform: scale(0.8);
   transition: opacity 0.2s ease, transform 0.2s ease;
   padding: 2px;
   line-height: 1;
 }
 
-/* Force pen element indicator to fade into display view upon parent card container hover */
 .quest-card:hover .edit-quest-card-btn {
   opacity: 1;
   transform: scale(1);
 }
 
-.edit-quest-card-btn:hover {
-  transform: scale(1.2) !important;
-}
+.edit-quest-card-btn:hover { transform: scale(1.2) !important; }
 
-/* --- Modal Layout Button Actions Alignment Row --- */
 .modal-actions-row {
   display: flex;
   gap: 12px;
@@ -339,106 +305,134 @@
   width: 100%;
 }
 
-/* Cozy Red Delete button styling matching your retro palette block shadows */
 .delete-quest-btn {
   padding: 12px 20px;
-  background: #e53935; /* Retro Crimson alert color */
+  background: #e53935;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+  font: bold 1rem sans-serif;
   cursor: pointer;
   box-shadow: 0 4px 0 #b71c1c;
   transition: transform 0.1s, box-shadow 0.1s;
   white-space: nowrap;
 }
 
-.delete-quest-btn:hover {
-  background: #ef5350;
-}
-
+.delete-quest-btn:hover { background: #ef5350; }
 .delete-quest-btn:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 #b71c1c;
 }
 
-/* Cozy Golden Accent completion button styling rules */
 .complete-quest-btn {
   flex: 1;
   padding: 12px 20px;
-  background: #ffb300; /* Rich Gold Amber */
+  background: #ffb300;
   color: #212121;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+  font: bold 1rem sans-serif;
   cursor: pointer;
-  box-shadow: 0 4px 0 #ff6f00; /* Darker amber accent shadow depth */
+  box-shadow: 0 4px 0 #ff6f00;
   transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s;
   white-space: nowrap;
 }
 
-.complete-quest-btn:hover {
-  background: #ffca28; /* Shimmer highlight gold */
-}
-
+.complete-quest-btn:hover { background: #ffca28; }
 .complete-quest-btn:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 #ff6f00;
 }
 
+/* --- Rewards Layout Panels --- */
 .quest-rewards-panel {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
 }
 
 .reward-title {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #1a110c;
-    font-weight: bold;
+  font: bold 0.75rem sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1a110c;
 }
 
 .reward-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-/* --- Quick Complete Card Button --- */
 .quick-complete-card-btn {
-    background: #7cb342;
-    border: none;
-    font-size: 0.85rem;
-    cursor: pointer;
-    border-radius: 4px;
-    padding: 3px 6px;
-    line-height: 1;
-    box-shadow: 0 2px 0 #558b2f;
-    transition: transform 0.1s, background-color 0.2s;
+  background: #7cb342;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 3px 6px;
+  line-height: 1;
+  box-shadow: 0 2px 0 #558b2f;
+  transition: transform 0.1s, background-color 0.2s;
 }
 
 .quick-complete-card-btn:hover {
-    background: #8bc34a;
-    transform: scale(1.1);
+  background: #8bc34a;
+  transform: scale(1.1);
 }
 
 .quick-complete-card-btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 1px 0 #558b2f;
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #558b2f;
 }
 
 .quest-meta-right {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 4px; /* Keeps action components cozy together */
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-/* --- Animations --- */
+.quest-meta {
+  display: flex;
+  align-items: center;
+  margin: -10px -10px 0px -10px;
+  background: rgba(137, 55, 3, 0.15);
+  padding: 10px 12px 5px 12px;
+  border-bottom: 2px solid #cb8348;
+  line-height: 1;
+  gap: 10px;
+}
+
+.quest-badge-skill {
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: #6d4c41;
+  background: transparent;
+  padding: 0;
+}
+
+.seperator{
+  color: #6d4c41;
+}
+
+.quest-badge-rank {
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.quest-card.rank-favor .quest-badge-rank { color: #0e7500; }
+.quest-card.rank-project .quest-badge-rank { color: #009494; }
+.quest-card.rank-special .quest-badge-rank { color: #e040fb; }
+
+/* --- Animations & Media Breakpoints --- */
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 2px rgba(224, 64, 251, 0.4); }
+  100% { box-shadow: 0 0 8px rgba(224, 64, 251, 0.8); }
+}
+
 @keyframes fadeInBackground {
   from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
   to { background: rgba(46, 34, 25, 0.45); backdrop-filter: blur(3px); }
@@ -450,23 +444,18 @@
 }
 
 @keyframes slideDownPanel {
-  from {
-    transform: translateY(-40px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(-40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideUpPanel {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-40px);
-    opacity: 0;
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-40px); opacity: 0; }
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
   }
 }
