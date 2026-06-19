@@ -5,7 +5,8 @@ const SKILL_NAMES = {
   sleep: "Sleep",
   food: "Food & Diet",
   cooking: "Cooking",
-  fitness: "Gaming & Leisure"
+  fitness: "Gaming & Leisure",
+  house_chores: "House Chores"
 };
 
 function SkillsSummary({ userSkills }) {

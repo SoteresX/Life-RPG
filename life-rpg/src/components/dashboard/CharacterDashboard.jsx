@@ -49,11 +49,11 @@ function CharacterDashboard({ user, onLogout, notify }){
 
                 {activeTab === 'skills' && (
                 <div className="tab-view fade-in">
-                    <SkillList />
+                    <SkillList userSkills={userSkills}/>
                 </div>
                 )}
                 {activeTab === 'quests' && (
-                    <QuestMenu user={user} notify={notify} />
+                    <QuestMenu user={user} userSkills={userSkills} notify={notify} />
                 )}
             </main>
         </div>

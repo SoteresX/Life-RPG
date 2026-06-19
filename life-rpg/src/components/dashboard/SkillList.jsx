@@ -45,11 +45,22 @@ sleep: {
       4: "Athlete: Regular heavy training, great stamina, and mobility.",
       5: "Peak Form: Optimized physical strength, conditioning, and recovery."
     }
+  },
+  house_chores: {
+    name: "House Chores",
+    description: "Taking care of house work.",
+    milestones: {
+      1: "Clueless Squire: The trash is overflowing, the bed is a pile of sheets, and you're pretty sure that mug has been on your desk for three days. Every chore feels like an elite boss battle.",
+      2: "Apprentice Caretaker: You've learned the layout of the land. The dishes are getting washed before they grow a civilization, and you actually know where the mop lives.",
+      3: "Domestic Sentinel: Maintenance has become a habit. You reset your room every morning like a daily server refresh, and dust bunnies tremble at your approach.",
+      4: "Sovereign of Self-Care: Your environment actively works for you, not against you. Your living space is organized for peak efficiency, and you execute chores with swift, satisfying precision.",
+      5: "Master of the Sanctuary: Your home is an impeccable canvas of peace. Chaos cannot take root here; you manage your domain with effortless grace, turning mundane chores into a meditative art form."
+    }
   }
 };
 
 function SkillList( {userSkills} ){
-    const liveSkills = userSkills = {sleep: 1, food:1, cooking: 1, gaming: 1, health: 1};
+    const liveSkills = userSkills;
 
     return (
       <div className="skills-container">

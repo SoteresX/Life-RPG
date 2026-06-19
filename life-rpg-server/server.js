@@ -156,10 +156,16 @@ app.get('/api/user/:userId/skills', async (req, res) => {
             return res.json({ sleep: 1, food: 1, cooking: 1, fitness: 1});
         }
 
-        const formattedSkills = skillsResult.rows.reduce((acc, row) => {
-            acc[row.skill_key] = row.current_level;
-            return acc;
-        }, {});
+        const formattedSkills = skillsResult.rows.map(row => {
+            const readableName = row.skill_key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+            return{
+                id: row.skill_key, // Used for React keys
+                skill_key: row.skill_key,
+                name: readableName,
+                current_level: row.current_level
+            }
+           
+        });
 
         res.json(formattedSkills);
     } catch (err){
@@ -229,6 +235,97 @@ app.delete('/api/quests/:questId', async (req, res) => {
         res.status(500).json({ error: "Server error deleting quest."});
     }
 })
+
+app.post('/api/quests/:questId/complete', async (req, res) => {
+    const { questId } = req.params;
+    try{
+        //Get quest
+        const questResult = await pool.query('SELECT * FROM user_quests WHERE id = $1', [questId]);
+        if (questResult.rows.length === 0) {
+            return res.status(404).json({ error: "Quest not found."});
+        }
+        const quest = questResult.rows[0];
+        const userId = quest.user_id;
+        const skillKey = quest.skill_target;
+
+        //The amount of EXP, Skill EXP and coins each difficulty gives (can change any time)
+        let userXpGained = 15;
+        let skillXpGained = 25;
+        let coinsGained = 10;
+
+        if (quest.difficulty === 'Project'){
+            userXpGained = 40;
+            skillXpGained = 65;
+            coinsGained = 30;
+        } else if (quest.difficulty === 'Special'){
+            userXpGained = 100;
+            skillXpGained = 150;
+            coinsGained = 65;
+        }
+
+        //Current user data
+        const userResult = await pool.query('SELECT level, exp, coins FROM users WHERE id = $1', [userId]);
+        let user = userResult.rows[0];
+
+        let newUserXp = user.exp + userXpGained;
+        let newLevel = user.level;
+        let newCoins = (user.coins || 0) + coinsGained;
+
+        //User level up checks and calculations
+        let userXpNeeded = Math.floor(100 * Math.pow(newLevel, 2.2));
+        while (newUserXp >= userXpNeeded){
+            newUserXp -= userXpNeeded;
+            newLevel += 1;
+            userXpNeeded = Math.floor(100 * Math.pow(newLevel, 2.2));
+        }
+
+        //Current Skill data
+        const skillResult = await pool.query(
+            'SELECT current_level, current_exp FROM user_skills WHERE user_id = $1 AND skill_key = $2', [userId, skillKey]
+        );
+
+        let newSkillXp = skillXpGained;
+        let newSkillLevel = 1;
+
+        if(skillResult.rows.length > 0){
+            newSkillXp += skillResult.rows[0].current_exp;
+            newSkillLevel = skillResult.rows[0].current_level;
+        }
+
+        //Skill level up checks and calculations
+        let skillXpNeeded = Math.floor(150 * Math.pow(newSkillLevel, 2.15));
+        while (newSkillXp >= skillXpNeeded){
+            newSkillXp -= skillXpNeeded;
+            newSkillLevel += 1;
+            skillXpNeeded = Math.floor(150 * Math.pow(newSkillLevel, 2.15));
+        }
+
+        await pool.query('BEGIN');
+
+        const updatedUser = await pool.query(
+            `UPDATE users SET level = $1, exp = $2, coins = $3 WHERE id = $4
+            RETURNING id, user_name, level, exp, coins, hp, energy, avatar_url`, [newLevel, newUserXp, newCoins, userId]
+        );
+
+        await pool.query(
+            `INSERT INTO user_skills (user_id, skill_key, current_level, current_exp) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id, skill_key)
+            DO UPDATE SET current_level = $3, current_exp = $4`, [userId, skillKey, newSkillLevel, newSkillXp]
+        )
+
+        await pool.query('DELETE FROM user_quests WHERE id = $1', [questId]);
+        await pool.query('COMMIT');
+
+        res.json({
+            message: "Quest Completed! Rewards claimed.",
+            gained: { userXp: userXpGained, skillXp: skillXpGained, coins: coinsGained},
+            user: updatedUser.rows[0]
+        });
+    } catch (err){
+        await pool.query('ROLLBACK');
+        console.error("Error completing quest:". err.message);
+        res.status(500).json({error: "Server error executing completion transaction logic"});
+    }
+});
 
 app.listen(5000, () => {
     console.log('Backend server is officially running on port 5000');

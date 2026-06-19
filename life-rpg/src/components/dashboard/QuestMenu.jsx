@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './QuestMenu.css';
+import { useQuestModal } from '../../hooks/useQuestModal';
 
-function QuestMenu({ user, notify }) {
+const getQuestRewards = (difficulty) => {
+    switch (difficulty){
+        case 'Favor':
+            return { xp: 15, skillXp: 25, coins: 5 };
+        case 'Project':
+            return { xp: 30, skillXp: 45, coins: 15 };
+        case 'Special':
+            return { xp: 50, skillXp: 60, coins: 30};
+    }
+}
+
+function QuestMenu({ user, userSkills, notify }) {
     const [quests, setQuests] = useState([]);
-    const [title, setTitle] = useState('');
-    const [difficulty, setDifficulty] = useState('Favor'); // Favor, Project, Special
-    const [skillTarget, setSkillTarget] = useState('sleep');
-    const [modalStatus, setModalStatus] = useState('closed');
-    const [editingQuest, setEditingQuest] = useState(null);
-
+    
     // Fetch quests from database on component mount
     useEffect(() => {
         if (!user || !user.id) return;
@@ -21,101 +28,46 @@ function QuestMenu({ user, notify }) {
             .catch(err => console.error("Error loading quests:", err));
     }, [user]);
 
-    const handleOpenCreateModal = () => {
-        setEditingQuest(null);
-        setTitle('');
-        setDifficulty('Favor');
-        setSkillTarget('sleep');
-        setModalStatus('open');
-    };
+   const {
+    modalStatus,
+    editingQuest,
+    title,
+    difficulty,
+    skillTarget,
+    setTitle,
+    setDifficulty,
+    setSkillTarget,
+    manageModal,
+    handleFormSubmit,
+    handleDeleteQuest,
+    handleCompleteQuest
+   } = useQuestModal();
 
-    const handleOpenEditModal = (quest) => {
-        setEditingQuest(quest);
-        setTitle(quest.title);
-        setDifficulty(quest.difficulty);
-        setSkillTarget(quest.skill_target);
-        setModalStatus('open');
-    };
-
-    const handleCloseModal = () => {
-        setModalStatus('exiting');   
-        setTimeout(() => {
-            setModalStatus('closed');
-            setEditingQuest(null);
-        }, 200);
-    };
-
-    // Handle Form submission
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        if (!title.trim()) return;
-
-        const isEditing = !!editingQuest;
-        const url = isEditing ? `http://localhost:5000/api/quests/${editingQuest.id}` : `http://localhost:5000/api/user/${user.id}/quests`
-
-        const method = isEditing ? 'PUT' : 'POST';
-
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, difficulty, skill_target: skillTarget })
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Failed to save quest");
-            return res.json();
-        })
-        .then(data => {
-            if(isEditing){
-                setQuests(prev => prev.map(q => q.id === editingQuest.id ? data.quest : q));
-                if (notify) notify ("📝 Quest contract modified successfully!", "success");
-            } else{
-                setQuests(prev => [data.quest, ...prev]); 
-                if (notify) notify("⚔️ New Quest posted to the bulletin board!", "success");
-            }
-            handleCloseModal(); // Use the smooth exit close here!
-        })
-        .catch(err => {
-            console.error(err);
-            if (notify) notify("❌ Failed to register quest on the guild board.", "error");
-        })
-    };
-
-    const handleDeleteQuest = () => {
-        if (!editingQuest) return;
-        fetch(`http://localhost:5000/api/quests/${editingQuest.id}`, {
-            method: 'DELETE'
-        })
-        .then(res => {
-            if(!res.ok) throw new Error();
-            setQuests(prev => prev.filter(q => q.id !== editingQuest.id));
-            handleCloseModal();
-            if (notify) notify("🗑️ Quest contract shredded and removed.", "success");
-        })
-        .catch(err => {
-            console.error(err);
-            if (notify) notify("❌ Failed to delete quest assignment.", "error");
-        });
-    };
+   useEffect(() => {
+       if (Array.isArray(userSkills) && userSkills.length > 0 && !skillTarget) {
+           const firstSkill = userSkills[0].skill_key || userSkills[0].name?.toLowerCase() || userSkills[0].id;
+           setSkillTarget(firstSkill);
+       }
+   }, [userSkills, skillTarget, setSkillTarget]);
 
     return (
         <div className="quests-container fade-in">
             <h2>⚔️ Adventurer's Guild Bulletin</h2>
             <p className="subtitle">Track your habits as cozy quests. Click the plus button to sign a new contract!</p>
 
-            {/* INTERACTIVE OVERLAY MODAL PANEL */}
             {modalStatus !== 'closed' && (
                 <div 
                     className={`modal-overlay ${modalStatus === 'exiting' ? 'fade-out-bg' : ''}`} 
-                    onClick={handleCloseModal}
+                    onClick={() => manageModal('close')}
                 >
                     <form 
-                        onSubmit={handleFormSubmit} 
+                        onSubmit={(e) => handleFormSubmit(e, { user, setQuests, notify })}
                         className={`quest-form modal-panel-content ${modalStatus === 'exiting' ? 'slide-up-exit' : ''}`} 
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="modal-header">
                             <h3>{editingQuest ? "📝 Edit Quest Details" : "📜 Post a New Quest"}</h3>
-                            <button type="button" className="close-panel-btn" onClick={handleCloseModal}>×</button>
+                            <button type="button" className="close-panel-btn" onClick={() => manageModal('close')}>×</button>
                         </div>
                         
                         <div className="form-group">
@@ -127,11 +79,21 @@ function QuestMenu({ user, notify }) {
                             <div className="form-group">
                                 <label>Target Life Skill</label>
                                 <select value={skillTarget} onChange={(e) => setSkillTarget(e.target.value)}>
-                                    <option value="sleep">Sleep</option>
-                                    <option value="food">Food & Diet</option>
-                                    <option value="cooking">Cooking</option>
-                                    <option value="fitness">Fitness & Training</option>
-                                </select>
+                                {/* Safe Array Verification Wrapper */}
+                                {!Array.isArray(userSkills) || userSkills.length === 0 ? (
+                                    <option value="">Loading skills...</option>
+                                ) : (
+                                    userSkills.map((skill) => {
+                                        const skillValue = skill.skill_key || skill.name?.toLowerCase() || skill.id;
+                                        const skillDisplay = skill.name || skill.skill_key;
+                                        return (
+                                            <option key={skill.id || skillValue} value={skillValue}>
+                                                {skillDisplay}
+                                            </option>
+                                        );
+                                    })
+                                )}
+                            </select>
                             </div>
                             <div className="form-group">
                                 <label>Rank Difficulty</label>
@@ -146,9 +108,11 @@ function QuestMenu({ user, notify }) {
                         {/* RENDER MODAL ACTION CONTROLS */}
                         <div className="modal-actions-row">
                             {editingQuest && (
-                                <button type="button" className="delete-quest-btn" onClick={handleDeleteQuest}>
-                                    🗑️ Fail Quest
-                                </button>
+                                <>
+                                    <button type="button" className="delete-quest-btn" onClick={() => handleDeleteQuest({ setQuests, notify})}>
+                                        🗑️ Abandon
+                                    </button>
+                                </>
                             )}
                             <button type="submit" className="post-quest-btn">
                                 {editingQuest ? "Save Adjustments" : "Accept Assignment"}
@@ -165,30 +129,50 @@ function QuestMenu({ user, notify }) {
                     <p className="empty-msg">The bulletin board is completely clear. Click the green button above to post a habit task!</p>
                 ) : (
                     <div className="quests-grid">
-                        {quests.map((quest) => (
-                            <div key={quest.id} className={`quest-card rank-${quest.difficulty.toLowerCase()}`}>
-                                <div className="quest-meta">
-                                    <span className="quest-badge-skill">{quest.skill_target}</span>
-                                    <div className="quest-meta-right">
+                        {quests.map((quest) => {
+                            // Calculate rewards for this specific quest card
+                            const rewards = getQuestRewards(quest.difficulty);
+
+                            return (
+                                <div key={quest.id} className={`quest-card rank-${quest.difficulty.toLowerCase()}`}>
+                                    <div className="quest-meta">
+                                        <span className="quest-badge-skill">{quest.skill_target}</span>
                                         <span className="quest-badge-rank">{quest.difficulty}</span>
-                                        {/* HOVER PEN EDIT BUTTON */}
-                                        <button 
-                                            className="edit-quest-card-btn" 
-                                            onClick={() => handleOpenEditModal(quest)}
-                                            title="Edit Quest Details"
-                                        >
-                                            ✏️
-                                        </button>
+                                        <div className="quest-meta-right">
+                                            <button 
+                                                className="quick-complete-card-btn"
+                                                onClick={() => handleCompleteQuest({ setQuests, notify }, quest)}
+                                                title="Complete Quest"
+                                            >
+                                                ✨
+                                            </button>
+                                            <button 
+                                                className="edit-quest-card-btn" 
+                                                onClick={() => manageModal('edit', quest)}
+                                                title="Edit Quest Details"
+                                            >
+                                                ✏️
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4 className="quest-title">{quest.title}</h4>
+
+                                    {/* NEW: REWARDS FOOTER PANEL */}
+                                    <div className="quest-rewards-panel">
+                                        <span className="reward-title">Rewards:</span>
+                                        <div className="reward-badges">
+                                            <span title="Player XP">✨ {rewards.xp}XP</span>
+                                            <span title={`${quest.skill_target.toUpperCase()} XP`}>🧬 {rewards.skillXp}XP</span>
+                                            <span title="Gold Coins">💰 {rewards.coins}g</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <h4 className="quest-title">{quest.title}</h4>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
-
-            <button className="add-quest-trigger-btn" onClick={handleOpenCreateModal} title="Post a New Quest">+</button>
+            <button className="add-quest-trigger-btn" onClick={() => manageModal('open')} title="Post a New Quest">+</button>
         </div>
     );
 }
