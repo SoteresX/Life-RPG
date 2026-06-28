@@ -43,6 +43,10 @@ app.get('/', (req,res) => {
     res.send('The Life RPG Server is up and running!');
 });
 
+//==================================
+//             ACCOUNT
+//==================================
+
 //Login
 app.post('/api/login', async (req,res) => {
     const {user_name, password} = req.body;
@@ -144,12 +148,16 @@ app.post('/api/user/upload-avatar', upload.single('avatar'), async (req, res) =>
     }
 });
 
+//==================================
+//             SKILLS
+//==================================
+
 app.get('/api/user/:userId/skills', async (req, res) => {
     const {userId} = req.params;
 
     try{
         const skillsResult = await pool.query(
-            'SELECT skill_key, current_level, current_exp FROM user_skills WHERE user_id = $1', [userId]
+            'SELECT id, skill_key, name, skill_description, current_level, current_exp FROM user_skills WHERE user_id = $1', [userId]
         );
 
         if (skillsResult.rows.length === 0){
@@ -159,9 +167,10 @@ app.get('/api/user/:userId/skills', async (req, res) => {
         const formattedSkills = skillsResult.rows.map(row => {
             const readableName = row.skill_key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
             return{
-                id: row.skill_key, // Used for React keys
+                id: row.id, // Used for React keys
                 skill_key: row.skill_key,
                 name: readableName,
+                description: row.skill_description,
                 current_level: row.current_level,
                 current_exp: row.current_exp
             }
@@ -175,6 +184,75 @@ app.get('/api/user/:userId/skills', async (req, res) => {
     }
 })
 
+app.post('/api/user/:userId/skills', async (req,res) =>{
+    const {userId} = req.params;
+    const {name, skill_key, description} = req.body;
+
+    if(!name || !skill_key){
+        return res.status(400).json({ error: "Skill not found."});
+    }
+
+    try{
+        const skillCheck = await pool.query(
+            'SELECT id FROM user_skills WHERE user_id = $1 AND skill_key = $2', [userId, skill_key]
+        );
+
+        if(skillCheck.rows.length > 0){
+            return res.status(400).json({ error: "This skill already exists."});
+        }
+
+        const newSkillResult = await pool.query(
+            `INSERT INTO user_skills (user_id, skill_key, name, skill_description, current_level, current_exp)
+            VALUES ( $1, $2, $3, $4, 1, 0)
+            RETURNING id, skill_key, name, skill_description, current_level, current_exp`, [userId, skill_key, name , description || 'Custom life skill']
+        );
+
+        const savedRow = newSkillResult.rows[0];
+
+        res.status(201).json({
+            id: savedRow.id,
+            skill_key: savedRow.skill_key,
+            name: savedRow.name,
+            description: savedRow.skill_description,
+            current_level: savedRow.current_level,
+            current_exp: savedRow.current_exp
+        });
+    } catch (err) {
+        console.error("Error forging new custom skill:", err.message);
+        res.status(500).json({ error: "Failed to add skill."});
+    }
+
+})
+
+app.delete('/api/skills/:skillId', async (req, res) => {
+    const { skillId } = req.params;
+
+    try {
+        // 1. Ensure we aren't letting someone accidentally delete core masteries
+        const coreSkills = ['sleep', 'food', 'cooking', 'fitness'];
+        
+        const checkSkill = await pool.query(
+            'SELECT skill_key FROM user_skills WHERE id = $1',
+            [skillId]
+        );
+
+        if (checkSkill.rows.length === 0) {
+            return res.status(404).json({ error: "This skill discipline does not exist in the archives." });
+        }
+
+        if (coreSkills.includes(checkSkill.rows[0].skill_key)) {
+            return res.status(400).json({ error: "Core rules cannot be struck from your active ledger." });
+        }
+
+        // 2. Perform the erasure execution
+        await pool.query('DELETE FROM user_skills WHERE id = $1', [skillId]);
+
+        res.status(200).json({ success: true, message: "Skill successfully forgotten." });
+    } catch (err) {
+        console.error("Error erasing skill record:", err.message);
+        res.status(500).json({ error: "The guild ledger failed to execute the erasure sequence." });
+    }
+});
 
 //==================================
 //             QUESTS

@@ -52,9 +52,10 @@ function QuestMenu({ user, userSkills, notify }) {
 
     return (
         <div className="quests-container fade-in">
-            <h2>⚔️ Adventurer's Guild Bulletin</h2>
-            <p className="subtitle">Track your habits as cozy quests. Click the plus button to sign a new contract!</p>
-
+            <div className="tab-heading">
+                <h2>⚔️ Adventurer's Guild Bulletin</h2>
+                <p className="subtitle">Track your habits as cozy quests. Click the plus button to sign a new contract!</p>
+            </div>
             {modalStatus !== 'closed' && (
                 <div 
                     className={`modal-overlay ${modalStatus === 'exiting' ? 'fade-out-bg' : ''}`} 

@@ -1,26 +1,52 @@
 /* --- LIFE SKILLS TREE MASTER GRID --- */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(190px, 1fr));
   gap: 20px;
-  margin-top: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #893703 transparent;
+}
+
+.skill-grid-container {
+  box-shadow: inset 0 0 0 3px #893703, inset 0 0 0 6px #CB8348, 0 3px 0px rgba(0, 0, 0, 0.4);
+  background-color: #FFC98B;
+  height: 75vh;
+  overflow: hidden; 
+  padding: 20px 10px 20px 30px; 
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .skill-card {
-  background: #1a110c;
+  background: #FDBD73;
   border: 3px solid #72432a;
   padding: 16px;
   border-radius: 6px;
+  height: fit-content;
+  box-shadow: inset 0 0 0 3px #893703, inset 0 0 0 6px #CB8348, 0 3px 0px rgba(0, 0, 0, 0.4);
 }
 
 .skill-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 30px;
+  color: #1a110c;
+  margin-bottom: 10px;
 }
 
 .skill-badge {
-  background: #cca43b;
+  box-shadow: 
+    inset 0 0 0 1px #893703,
+    inset 0 0 0 3px #CB8348,
+    0 0px 0px #893703,          
+    0 2px 0px rgba(0, 0, 0, 0.4); 
   color: #1a110c;
   padding: 2px 8px;
   font-weight: bold;
@@ -30,7 +56,7 @@
 
 .skill-desc-taste {
   font-size: 13px;
-  color: #a39281;
+  color: #1a110c;
   margin-top: -4px;
 }
 
@@ -40,12 +66,9 @@
 
 .milestone-box {
   margin-top: 12px;
-  background: #261912;
-  border-left: 4px solid #cca43b;
-  padding: 8px;
   font-size: 13px;
   line-height: 1.4;
-  color: #e3d2be;
+  color: #1a110c;
 }
 
 /* Container for the overall exp subsegment block */
@@ -59,13 +82,13 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
-  color: #a3a3a3;
+  color: #1a110c;
   margin-bottom: 4px;
 }
 
 .exp-numbers-tracker {
   font-weight: 600;
-  color: #c084fc; /* Tinted violet text color */
+  color: #9b37ff; /* Tinted violet text color */
 }
 
 /* Background tracks container adjustments */
@@ -96,6 +119,109 @@
 /* --- UTILITY ANIMATIONS --- */
 .fade-in {
   animation: fadeInEffect 0.3s ease-in-out;
+}
+
+/* --- Skill Module Layout Upgrades --- */
+.skills-top-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.manage-skills-trigger-btn {
+  padding: 10px 16px;
+  background: #7cb342;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font: bold 0.95rem sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #558b2f;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.manage-skills-trigger-btn:hover { background: #8bc34a; }
+.manage-skills-trigger-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #558b2f;
+}
+
+/* --- Internal Modal Navigation Tabs --- */
+.skill-modal-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #893703;
+  padding-bottom: 12px;
+}
+
+.skill-tab-btn {
+  flex: 1;
+  padding: 8px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 2px solid #893703;
+  border-radius: 6px;
+  background: #fff;
+  color: #4a3728;
+}
+
+.skill-tab-btn.active-tab {
+  background: #7cb342;
+  color: white;
+}
+
+.skill-tab-btn.active-tab-delete {
+  background: #e53935;
+  color: white;
+}
+
+.skill-modal-body {
+  padding-top: 5px;
+}
+
+/* --- Deletion Flow UI Rows --- */
+.modal-notice-text {
+  font-size: 0.85rem;
+  color: #5d4037;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.custom-skills-removal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.removal-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid #cb8348;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.removal-row-item span {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #1a110c;
+}
+
+.compact-delete {
+  padding: 6px 12px !important;
+  font-size: 0.8rem !important;
+  box-shadow: 0 2px 0 #b71c1c !important;
+}
+.compact-delete:active {
+  transform: translateY(1px) !important;
+  box-shadow: 0 0px 0 #b71c1c !important;
 }
 
 @keyframes fadeInEffect {

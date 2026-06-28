@@ -20,6 +20,7 @@
   padding: 20px;
 }
 
+
 .profile{
     display: flex;
     justify-content: space-around;
@@ -102,3 +103,14 @@
 
 .logout-btn:hover { background: #ad3232; }
 .logout-btn:active { transform: translateY(4px); }
+
+.tab-heading h2{
+  font-size: 40px;
+  text-align: left;
+}
+
+.tab-heading p{
+  font-size: 25px;
+  text-align: left;
+  padding-left: auto;
+}

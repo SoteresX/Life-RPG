@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./SkillList.css";
 
-const SKILL_MILESTONES = {
-sleep: {
+const FIXED_MILESTONES = {
+  sleep: {
     name: "Sleep",
     description: "Your biological clock consistency.",
     milestones: {
@@ -50,83 +50,226 @@ sleep: {
     name: "House Chores",
     description: "Taking care of house work.",
     milestones: {
-      1: "Clueless Squire: The trash is overflowing, the bed is a pile of sheets, and you're pretty sure that mug has been on your desk for three days. Every chore feels like an elite boss battle.",
-      2: "Apprentice Caretaker: You've learned the layout of the land. The dishes are getting washed before they grow a civilization, and you actually know where the mop lives.",
-      3: "Domestic Sentinel: Maintenance has become a habit. You reset your room every morning like a daily server refresh, and dust bunnies tremble at your approach.",
-      4: "Sovereign of Self-Care: Your environment actively works for you, not against you. Your living space is organized for peak efficiency, and you execute chores with swift, satisfying precision.",
-      5: "Master of the Sanctuary: Your home is an impeccable canvas of peace. Chaos cannot take root here; you manage your domain with effortless grace, turning mundane chores into a meditative art form."
+      1: "Clueless Squire: The trash is overflowing, the bed is a pile of sheets...",
+      2: "Apprentice Caretaker: You've learned the layout of the land...",
+      3: "Domestic Sentinel: Maintenance has become a habit...",
+      4: "Sovereign of Self-Care: Your environment actively works for you...",
+      5: "Master of the Sanctuary: Your home is an impeccable canvas of peace..."
     }
   }
 };
 
-function SkillList( {userSkills} ){
-    if (!userSkills || !Array.isArray(userSkills)) {
-      return (
-        <div className="skills-container">
-          <h2>⚔️ Life Skill Masteries</h2>
-          <p className="loading-text">Inspecting guild registers...</p>
-        </div>
-      );
-    }
 
+
+const getCustomMilestone = (name, level) => {
+  const genericTitles = { 1: "Novice", 2: "Apprentice", 3: "Adept", 4: "Expert", 5: "Master" };
+  return `${genericTitles[level] || "Novice"} of ${name}. Continuing your journey of dedicated mastery.`;
+};
+
+function SkillList({ userSkills, onAddSkill, onRemoveSkill }) {
+  const [skillDescription, setSkillDescription] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('add'); // 'add' or 'remove'
+  const [newSkillName, setNewSkillName] = useState('');
+
+  const openManagementModal = () => {
+    setNewSkillName('');       // Clear input fields
+    setSkillDescription('');    // Clear input fields
+    setModalMode('add');        // Reset tab view back to default
+    setIsModalOpen(true);       // Open the modal container
+  };
+
+  if (!userSkills || !Array.isArray(userSkills)) {
     return (
       <div className="skills-container">
         <h2>⚔️ Life Skill Masteries</h2>
-        <p className="subtitle">Each skill caps at Level 5. Unlock higher tiers to upgrade your life description!</p>
-        
-        <div className="skills-grid">
-          {Object.keys(SKILL_MILESTONES).map((skillKey) => {
-            const skillDetails = SKILL_MILESTONES[skillKey];
-            const actualSkill = userSkills.find(s => s.skill_key === skillKey);
-            const currentLevel = actualSkill ? actualSkill.current_level : 1;
-            const currentExp = actualSkill ? actualSkill.current_exp : 0;
+        <p className="loading-text">Inspecting guild registers...</p>
+      </div>
+    );
+  }
 
-            const expNeeded = Math.floor(150 * Math.pow(currentLevel, 2.15));
-            const expPercentage = Math.min((currentExp / expNeeded) * 100, 100);
+  const handleAddSubmit = (e) => {
+    e.preventDefault();
+    if (!newSkillName.trim()) return;
 
-            const currentDescription = skillDetails.milestones[currentLevel] || "Error";
-            const totalProgressPercentage = (currentLevel / 5) * 100;
+    onAddSkill({
+      name: newSkillName.trim(),
+      skill_key: newSkillName.trim().toLowerCase().replace(/\s+/g, '_'),
+      description: skillDescription.trim()
+    });
+    setNewSkillName('');
+    setIsModalOpen(false);
+  };
 
-            return (
-              <div key={skillKey} className="skill-card">
-                <div className="skill-header">
-                  <h3>{skillDetails.name}</h3>
-                  <span className="skill-badge">LVL {currentLevel}/5</span>
+  return (
+    <div className="skills-container">
+      <div className="skills-top-panel">
+        <div className="tab-heading">
+          <h2>⚔️ Life Skill Masteries</h2>
+          <p className="subtitle">Each skill caps at Level 5. Unlock higher tiers to upgrade your life description!</p>
+        </div>
+        <button className="manage-skills-trigger-btn" onClick={openManagementModal}>
+          ⚙️ Manage Skills
+        </button>
+      </div>
+
+      {/* --- REUSABLE MODAL OVERLAY & CONTENT --- */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="quest-form modal-panel-content" onClick={(e) => e.stopPropagation()}>
+            
+            <div className="modal-header">
+              <h3>✨ Guild Skill Registries</h3>
+              <button type="button" className="close-panel-btn" onClick={() => setIsModalOpen(false)}>×</button>
+            </div>
+
+            {/* Sub-navigation tabs inside the panel */}
+            <div className="skill-modal-tabs">
+              <button 
+                className={`skill-tab-btn ${modalMode === 'add' ? 'active-tab' : ''}`}
+                onClick={() => setModalMode('add')}
+              >
+                🔨 Forge New Skill
+              </button>
+              <button 
+                className={`skill-tab-btn ${modalMode === 'remove' ? 'active-tab-delete' : ''}`}
+                onClick={() => setModalMode('remove')}
+              >
+                🗑️ Remove Custom Skill
+              </button>
+            </div>
+
+            {/* MODE 1: FORGE COMPONENT */}
+            {modalMode === 'add' && (
+              <form onSubmit={handleAddSubmit} className="skill-modal-body">
+                <div className="form-group">
+                  <label>Life Skill Name</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g., Web Development, Meditation..." 
+                    value={newSkillName}
+                    onChange={(e) => setNewSkillName(e.target.value)}
+                    maxLength={30}
+                    required 
+                  />
                 </div>
-                <p className="skill-desc-taste">{skillDetails.description}</p>
-                
-                <div className="progress-bar-container skill-bg">
-                  <div className="progress-fill skill-fill" style={{ width: `${totalProgressPercentage}%` }}></div>
+
+                <div className="form-group" style={{ marginTop: '15px' }}>
+                  <label>Skill Description</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g., Building application ecosystems from scratch." 
+                    value={skillDescription}
+                    onChange={(e) => setSkillDescription(e.target.value)}
+                    maxLength={100}
+                  />
                 </div>
 
-                {currentLevel < 5 ? (
-                <div className="skill-exp-section">
-                  <div className="skill-exp-meta">
-                    <span>Progress to Level up</span>
-                    <span className="exp-numbers-tracker">{currentExp} / {expNeeded} XP</span>
-                  </div>
-                  <div className="progress-bar-container skill-exp-track-bg">
-                    <div 
-                      className="progress-fill skill-exp-fill-purple" 
-                      style={{ width: `${expPercentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ) : (
-                <div className="skill-exp-section maxed-out-tag">
-                  ✨ Skill Mastery Maximum Reached ✨
-                </div>
-              )}
+                <button type="submit" className="post-quest-btn" style={{ marginTop: '20px' }}>
+                  Accept New Skill Discipline
+                </button>
+              </form>
+            )}
 
-                <div className="milestone-box">
-                  <strong>Current Status:</strong> "{currentDescription}"
+            {/* MODE 2: REMOVE COMPONENT */}
+            {modalMode === 'remove' && (
+              <div className="skill-modal-body">
+                <p className="modal-notice-text">Select a dynamic discipline to strike from your ledger. Core rules cannot be deleted.</p>
+                <div className="custom-skills-removal-list">
+                  {userSkills.filter(s => !Object.prototype.hasOwnProperty.call(FIXED_MILESTONES, s.skill_key) || s.skill_key === 'house_chores').length === 0 ? (
+                    <p className="empty-msg">No custom skills available to delete.</p>
+                  ) : (
+                    userSkills
+                      .filter(s => !Object.prototype.hasOwnProperty.call(FIXED_MILESTONES, s.skill_key) || s.skill_key === 'house_chores')
+                      .map(skill => (
+                        <div key={skill.id} className="removal-row-item">
+                          <span>📜 {skill.name} (LVL {skill.current_level || 1})</span>
+                          <button 
+                            className="delete-quest-btn compact-delete"
+                            onClick={() => {
+                              onRemoveSkill(skill.id);
+                              // Close modal safely if removing the last element
+                              if (userSkills.filter(s => !Object.prototype.hasOwnProperty.call(FIXED_MILESTONES, s.skill_key) || s.skill_key === 'house_chores').length <= 1) {
+                                setIsModalOpen(false);
+                              }
+                            }}
+                          >
+                            🗑️ Striking Out
+                          </button>
+                        </div>
+                      ))
+                  )}
                 </div>
               </div>
-              );
-          })}
+            )}
+
           </div>
-        </div>  
-    )
+        </div>
+      )}
+
+      {/* --- MAIN DISPLAY GRID --- */}
+      <div className="skill-grid-container">
+        <div className="skills-grid">
+            {userSkills.map((skill) => {
+              const skillKey = skill.skill_key;
+              const isCoreSkill = Object.prototype.hasOwnProperty.call(FIXED_MILESTONES, skillKey);
+              
+              const displayName = isCoreSkill ? FIXED_MILESTONES[skillKey].name : skill.name;
+              const displayDesc = isCoreSkill ? FIXED_MILESTONES[skillKey].description : (skill.description || "Custom discipline.");
+              
+              const currentLevel = skill.current_level || 1;
+              const currentExp = skill.current_exp || 0;
+
+              const expNeeded = Math.floor(150 * Math.pow(currentLevel, 2.15));
+              const expPercentage = Math.min((currentExp / expNeeded) * 100, 100);
+              const totalProgressPercentage = (currentLevel / 5) * 100;
+
+              const currentDescription = isCoreSkill 
+                ? FIXED_MILESTONES[skillKey].milestones[currentLevel]
+                : getCustomMilestone(displayName, currentLevel);
+
+              return (
+                <div key={skill.id || skillKey} className="skill-card">
+                  <div className="skill-header">
+                    <h3>{displayName}</h3>
+                    <span className="skill-badge">LVL {currentLevel}/5</span>
+                  </div>
+                  
+                  <p className="skill-desc-taste">{displayDesc}</p>
+                  
+                  <div className="progress-bar-container skill-bg">
+                    <div className="progress-fill skill-fill" style={{ width: `${totalProgressPercentage}%` }}></div>
+                  </div>
+
+                  {currentLevel < 5 ? (
+                    <div className="skill-exp-section">
+                      <div className="skill-exp-meta">
+                        <span>Progress to Level up</span>
+                        <span className="exp-numbers-tracker">{currentExp} / {expNeeded} XP</span>
+                      </div>
+                      <div className="progress-bar-container skill-exp-track-bg">
+                        <div 
+                          className="progress-fill skill-exp-fill-purple" 
+                          style={{ width: `${expPercentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="skill-exp-section maxed-out-tag">
+                      ✨ Skill Mastery Maximum Reached ✨
+                    </div>
+                  )}
+
+                  <div className="milestone-box">
+                    <strong>Current Status:</strong> "{currentDescription}"
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </div>  
+  );
 }
 
 export default SkillList;
