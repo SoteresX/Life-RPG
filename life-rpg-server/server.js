@@ -360,15 +360,18 @@ app.post('/api/quests/:questId/complete', async (req, res) => {
 
         //Current Skill data
         const skillResult = await pool.query(
-            'SELECT current_level, current_exp FROM user_skills WHERE user_id = $1 AND skill_key = $2', [userId, skillKey]
+            'SELECT name, current_level, current_exp FROM user_skills WHERE user_id = $1 AND skill_key = $2', [userId, skillKey]
         );
 
         let newSkillXp = skillXpGained;
         let newSkillLevel = 1;
 
+        let skillName = skillKey.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+
         if(skillResult.rows.length > 0){
             newSkillXp += skillResult.rows[0].current_exp;
             newSkillLevel = skillResult.rows[0].current_level;
+            skillName = skillResult.rows[0].name || skillName;
         }
 
         //Skill level up checks and calculations
@@ -387,8 +390,8 @@ app.post('/api/quests/:questId/complete', async (req, res) => {
         );
 
         await pool.query(
-            `INSERT INTO user_skills (user_id, skill_key, current_level, current_exp) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id, skill_key)
-            DO UPDATE SET current_level = $3, current_exp = $4`, [userId, skillKey, newSkillLevel, newSkillXp]
+            `INSERT INTO user_skills (user_id, skill_key, current_level, current_exp, name) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (user_id, skill_key)
+            DO UPDATE SET current_level = $3, current_exp = $4, name = $5`, [userId, skillKey, newSkillLevel, newSkillXp, skillName]
         )
 
         await pool.query('DELETE FROM user_quests WHERE id = $1', [questId]);
@@ -401,7 +404,7 @@ app.post('/api/quests/:questId/complete', async (req, res) => {
         });
     } catch (err){
         await pool.query('ROLLBACK');
-        console.error("Error completing quest:". err.message);
+        console.error("Error completing quest:", err.message);
         res.status(500).json({error: "Server error executing completion transaction logic"});
     }
 });
